@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(cors())
+app.use(express.json())
 
 app.get("/api/v1/healthcheck", (_req, res) => {
   return res.json({
