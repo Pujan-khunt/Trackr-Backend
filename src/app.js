@@ -1,8 +1,11 @@
 import express from "express";
 import "dotenv/config"
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors())
 
 app.get("/api/v1/healthcheck", (_req, res) => {
   return res.json({
@@ -10,4 +13,4 @@ app.get("/api/v1/healthcheck", (_req, res) => {
   })
 })
 
-app.listen(PORT, () => console.log(`Trackr Backend Unfortunately Running on port: ${PORT}  ;)`));
+app.listen(PORT, () => console.log(`Trackr Backend Unfortunately Running on port: ${PORT} ;)`));
