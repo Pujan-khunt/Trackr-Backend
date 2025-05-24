@@ -36,7 +36,10 @@ const CourseSchema = new mongoose.Schema({
     OBC_NCL: { type: Number, default: 0 },
     PWD: { type: Number, default: 0 },
   },
-  category_data: [CategoryData]
+  category_data: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "CategoryData",
+  },
 });
 
 export default Course = mongoose.model("Course", CourseSchema);
