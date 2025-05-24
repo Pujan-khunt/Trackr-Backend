@@ -2,13 +2,12 @@ import express from "express";
 import "dotenv/config"
 import connectDB from "./config/connectDB.js";
 import cors from "cors";
-import corsOptions from "./utils/corsOptions.js"
 
 const app = express();
 const PORT = process.env.PORT;
 connectDB();
 
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 
 app.get("/api/v1/healthcheck", (_req, res) => {
