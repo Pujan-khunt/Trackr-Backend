@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -16,19 +16,18 @@ const UserSchema = mongoose.Schema({
     trim: true,
     lowercase: true,
     index: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'],
   },
   password: {
     type: String,
     required: true,
     select: false,
   },
-  stream: {
-    type: String,
-    enum: ["Engineering", "Medical"],
-    default: "Engineering"
-  },
   colleges_applied: {
-
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "College",
+    required: true,
+    default: []
   }
 }, {
   timestamps: true
