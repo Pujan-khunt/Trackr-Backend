@@ -1,4 +1,4 @@
-import { ApiError } from "../utils/ApiError.util.js";
+import { ApiError } from "../utils/ApiError.js";
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 // Remove the "/" from the end, if any.
@@ -20,9 +20,11 @@ const customOriginAllowing = (origin, cb) => {
 };
 
 // The allowed origins are decided based on customOriginAllowing function
-export const corsOptions = {
+const corsOptions = {
   origin: customOriginAllowing,
   optionsSuccessStatus: 200,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
+
+export default corsOptions;

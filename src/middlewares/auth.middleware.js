@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ApiError } from "../utils/ApiError.util.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export const verifyJWT = (req, _res, next) => {
   // Extracting the authorization header from the request
