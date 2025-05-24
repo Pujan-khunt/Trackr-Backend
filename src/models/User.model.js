@@ -1,14 +1,6 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    lowercase: true,
-    index: true,
-  },
   email: {
     type: String,
     required: true,
@@ -24,13 +16,14 @@ const UserSchema = new mongoose.Schema({
     select: false,
   },
   colleges_applied: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: "College",
-    required: true,
     default: [],
-  }
+  },
+  refreshTokens: [String]
 }, {
   timestamps: true
 });
 
-export default User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
+export default User;
