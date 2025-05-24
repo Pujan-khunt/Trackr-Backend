@@ -82,14 +82,14 @@ export const loginUser = asyncHandler(async (req, res) => {
   );
 })
 
-const signUpUserPayloadSchema = z.object({
+const registerUserPayloadSchema = z.object({
   email: z.string().min(1, "Username needs to be of type String.").email(),
   password: z.string().min(8, "Password needs to have atleast 8 characters"),
 });
 
-function validateSignUpPayloadWithZod(payload) {
+function validateRegistrationPayloadWithZod(payload) {
   try {
-    signUpUserPayloadSchema.parse(payload);
+    registerUserPayloadSchema.parse(payload);
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.dir(error.issues)
@@ -100,9 +100,9 @@ function validateSignUpPayloadWithZod(payload) {
 
 const expiresInSeconds = 15 * 60; // 15 minutes or 900 seconds
 
-export const signUpUser = asyncHandler(async (req, res) => {
-  const signUpUserPayload = req.body;
-  const { email, password } = signUpUserPayload;
+export const registerUser = asyncHandler(async (req, res) => {
+  const registerUserPayload = req.body;
+  const { email, password } = registerUserPayload;
 
   // Check for empty username or password
   if (!email || !password) {
@@ -110,7 +110,7 @@ export const signUpUser = asyncHandler(async (req, res) => {
   }
 
   // Validate User Information with zod schema
-  validateSignUpPayloadWithZod(signUpUserPayload);
+  validateRegistrationPayloadWithZod(registerUserPayload);
 
   // Check for existing users with same username
   if (await User.findOne({ email }).exec()) {
@@ -129,4 +129,42 @@ export const signUpUser = asyncHandler(async (req, res) => {
     201,
     "User created successfully."
   ))
+});
+
+
+export const logoutUser = asyncHandler(async (req, res) => {
+  // Extract refresh token directly from request body
+  // The token should be provided by the client in the request
+  const refreshToken = req.body?.refreshToken;
+
+  if (!refreshToken) {
+    // No refresh token provided - treat as successful logout
+    // This maintains idempotent behavior for logout operations
+    return res.status(200).json(new ApiResponse(200, null, "User successfully logged out."));
+  }
+
+  // Check if the refresh token exists in the database
+  const existingUser = await User.findOne({ refreshTokens: { $in: [refreshToken] } }).exec();
+
+  if (!existingUser) {
+    // Token not found in database - could be expired, invalid, or already removed
+    // Still return success to maintain idempotent logout behavior
+    return res.status(200).json(new ApiResponse(200, null, "User successfully logged out."));
+  }
+
+  // Remove the specific refresh token from the user's token array
+  // This invalidates only the current session, leaving other sessions intact
+  existingUser.refreshTokens = existingUser.refreshTokens.filter(token => token !== refreshToken);
+
+  // Persist the changes to the database
+  await existingUser.save();
+
+  // Return 204 No Content to indicate successful logout with token removal
+  return res.status(204).json(
+    new ApiResponse(
+      204,
+      null,
+      "User successfully logged out."
+    )
+  );
 });
