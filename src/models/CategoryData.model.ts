@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const CASTE_CATEGORIES = ["SC", "ST", "OBC", "General", "PWD"]
+
 const CategoryDataSchema = new mongoose.Schema({
   category: {
     type: String,

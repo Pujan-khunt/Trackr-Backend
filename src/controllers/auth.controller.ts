@@ -1,9 +1,9 @@
-import asyncHandler from "../utils/asyncHandler.js"
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import asyncHandler from "../utils/asyncHandler"
+import { ApiError } from "../utils/ApiError";
+import { ApiResponse } from "../utils/ApiResponse";
 import z from "zod";
-import User from "../models/User.model.js";
-import generateTokens from "../utils/generateTokens.js";
+import User from "../models/User.model";
+import generateTokens from "../utils/generateTokens";
 
 const MAX_SESSIONS = process.env.MAX_SESSIONS;
 
